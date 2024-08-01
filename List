@@ -1,0 +1,229 @@
+
+#include <iostream>
+using namespace std;
+struct Node {
+        int data;
+        Node* next;
+    };
+ typedef Node* node;
+ node makenode(int x) {
+     node tmp = new Node();
+     tmp->data=x;
+     tmp->next=NULL;
+     return tmp;
+}
+ bool empty(node a) {
+     return a == nullptr;
+ }
+ int Size(node a) {
+     int cnt = 0;
+     while (a != NULL) {
+         a = a->next;
+         ++cnt;
+     }
+     return cnt;
+ }
+ void insertfirst(node &a, int x) {
+     node tmp = makenode(x);
+     if (a == NULL) {
+         a = tmp;
+     }
+     else {
+         tmp->next = a;
+         a = tmp;
+     }
+ }
+ void insertlast(node &a, int x) {
+     node tmp = makenode(x);
+     if (a == NULL) {
+         a=tmp;
+     }
+     else {
+         node p = a;
+         while (p->next != NULL) {
+                p=p->next;
+         }
+         p->next = tmp; 
+     }
+ }
+ void insertmiddle(node &a, int x, int pos) {
+     int n = Size(a);
+     if (pos <= 0 || pos > n+1 ) {
+         cout << "vi tri chen ko hop le. ";
+     }
+     if (pos==1) {
+         insertfirst(a, x); return;
+     }
+     else if ( pos==n+1 ) {
+         insertlast(a, x); return;
+     }
+    node p = a;
+    for (int i = 1; i < pos-1 ; i++) {
+        p = p->next;
+    }
+    node tmp = makenode(x);
+    tmp->next = p->next;
+    p->next = tmp;
+ }
+ void deletefirst(node &a) {
+     if (a == NULL) return;
+     else a=a->next;
+ }
+ void deletelast(node &a) {
+     if (a == NULL) return;
+     node sau = a;
+     node truoc = NULL;
+         
+    while (sau ->next!= NULL) {
+        truoc = sau;
+        sau = sau->next;
+    }
+    if (truoc == NULL) {
+        a =NULL;
+    }
+    else {
+        truoc->next = NULL;
+    }
+ }
+ void deletemiddle(node& a, int pos) {
+     int  n = Size(a);
+     if (n == 1) {
+         a == NULL;
+     }
+     if (pos == 1) {
+         deletefirst(a); return;
+     }
+     else if (pos == n) {
+         deletelast(a); return;
+     }
+     node truoc = a;
+     node sau = NULL;
+     for (int i = 1; i < pos - 1; i++) {
+         truoc = truoc->next;
+     }
+     sau = truoc->next;
+     truoc->next = sau->next;
+
+ }
+ void cmp(node &a, node &b) {
+     node tmp = a;
+     a = b;
+     b = tmp;
+ }
+ void in(node a) {
+     while (a != NULL) {
+         cout << a->data << " ";
+         a=a->next;
+     }
+ }
+ void sort(node &a) {
+     for (node trc = a; trc != NULL; trc=trc->next) {
+         node min = trc;
+         for (node sau = trc->next; sau != NULL; sau=sau->next) {
+             if (sau->data < min->data) {
+                 min = sau;
+             }
+         }
+         int tmp = min->data;
+         min->data = trc->data;
+         trc->data = tmp;
+     }
+ }
+ int main()
+ {
+     int lc;
+     bool kt = false;
+     node head = NULL;
+     do {
+         
+         
+         system("cls");
+         cout << "1:them vao dau ds \n"
+             << "2.them vao giua ds \n"
+             << "3.them vao cuoi ds \n"
+             << "4.xoa dau \n"
+             << "5.xoa giua \n"
+             << "6.xoa cuoi \n"
+             << "7.cout \n"
+             << "8.kt rong: \n"
+             << "9.xap xep tang dan: \n";
+         cout << "nhap vao lua chon ";
+         cin >> lc;
+         switch (lc)
+         {
+         case 1:
+         {
+             int x;
+             cout << "nhap vao data muon chen vao: ";
+             cin >> x;
+             insertfirst(head, x);
+             kt = true;
+         }
+         break;
+         case 2:
+         {
+             int x;
+             cout << "nhap vao data muon chen vao: ";
+             cin >> x;
+             int pos;
+             cout << "nhap vao vi tri: ";
+             cin >> pos;
+             insertmiddle(head, x, pos);
+             kt = true;
+         }
+         break;
+         case 3:
+         {
+             int x;
+             cout << "nhap vao data muon chen vao: ";
+             cin >> x;
+             insertlast(head, x);
+             kt = true;
+         }
+         break;
+         case 4:
+         {
+             deletefirst(head);
+
+         }
+         break;
+         case 5:
+         {
+             int pos;
+             cout << "nhap vao vi tri muon xoa: ";
+             cin >> pos;
+             deletemiddle(head, pos);
+             kt = true;
+         }
+         break;
+         case 6:
+         {
+             deletelast(head);
+         }
+         break;
+         case 7:
+         {
+             in(head);
+             system("pause");
+             kt = true;
+         }
+         break;
+         case 8:
+         {
+             empty(head);
+             cout << "size" << Size(head);
+             system("pause");
+             kt = true;
+         }
+         case 9:
+         {
+             sort(head);
+             kt = true;
+         }
+         break;
+         default:
+             kt = false;
+             break;
+         }
+     } while (kt==true);
+}
