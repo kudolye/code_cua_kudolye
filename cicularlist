@@ -1,0 +1,73 @@
+
+#include <iostream>
+using namespace std;
+struct Node {
+    int data;
+    Node* next;
+};
+typedef Node* node;
+struct clist {
+    node head;
+};
+void init(clist &a) {
+    a.head = nullptr;
+}
+node makenode(int x) {
+    node tmp = new Node;
+    tmp->data =x;
+    tmp->next = NULL;
+    return tmp;
+}
+void xuat(const clist a) {
+    node tmp = a.head;
+    if (a.head != NULL) {
+        do {
+            cout << tmp->data << " ";
+            tmp = tmp->next;
+        } while (tmp != a.head);
+    }
+    
+}
+void inf(clist &a, int x) {
+    node p = makenode(x);
+    if (a.head == NULL) {
+        a.head = p; 
+        a.head->next = p;
+    }
+    else {
+        node pl = a.head;
+        while (pl->next != a.head) {
+            pl = pl->next;
+        }
+        pl->next = p;
+        p->next = a.head;
+        a.head = p;
+    }
+}
+void inl(clist &a, int x) {
+    node p = makenode(x); 
+    if (a.head == nullptr) {
+        a.head = p;
+        a.head->next = p;
+    }
+    else {
+        node pl = a.head;
+        while (pl->next != a.head) {
+            pl = pl->next;
+        }
+        pl->next = p;
+        p->next = a.head;
+    }
+}
+int main()
+{
+    int x, y, z;
+    clist a;
+    init(a);
+    cin >> x >> y >> z;
+    inf(a, x);
+    inl(a, y);
+    inl(a, z);
+    xuat(a);
+
+}
