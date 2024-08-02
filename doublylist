@@ -1,0 +1,69 @@
+
+#include <iostream>
+using namespace std;
+struct Node {
+    int Mssv;
+    Node* next, * back;
+};
+typedef Node* node;
+struct dblist {
+    node head, tail;
+};
+void init(dblist &ds) {
+    ds.head = NULL;
+    ds.tail = NULL;
+}
+node makenode(int x) {
+    node tmp = new Node;
+    tmp->Mssv = x;
+    tmp->next = tmp->back=NULL;
+    return tmp;
+}
+void xuat(dblist ds) {
+    while (ds.head != NULL) {
+        cout << ds.head->Mssv << endl;
+        ds.head = ds.head->next;
+    }
+}
+void insertfisrt(dblist& a,int x) {
+    node tmp = makenode(x);
+    if (a.head == NULL) {
+        a.head = a.tail = tmp;
+    }
+    else {
+        tmp->next = a.head;
+        a.head->back = tmp;
+        a.head = tmp;
+    }
+}
+void insertlast(dblist& a, int x) {
+    node tmp = makenode(x);
+    if (a.head == NULL) {
+        a.head = a.tail = tmp;
+    }
+    else {
+        tmp->back = a.tail;
+        a.tail->next = tmp;
+        a.tail = tmp;
+    }
+}
+void deletef(dblist &a) {
+    if (a.head->next != NULL) {
+        a.head = a.head->next;
+    }
+}
+int main()
+{
+    dblist a;
+    init(a);
+    int x, y;
+    cout << "nhap vao so dau: ";
+    cin >> x;
+    cout << "nhap vao so cuoi: ";
+    cin >> y;
+    insertfisrt(a,x);
+    insertlast(a,y);
+    deletef(a);
+    xuat(a);
+    
+}
