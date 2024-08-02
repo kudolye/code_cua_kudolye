@@ -1,229 +1,136 @@
 
+
 #include <iostream>
+#include<iomanip>
+#include<string>
+#include<fstream>
 using namespace std;
-struct Node {
-        int data;
-        Node* next;
-    };
- typedef Node* node;
- node makenode(int x) {
-     node tmp = new Node();
-     tmp->data=x;
-     tmp->next=NULL;
-     return tmp;
+#define max 20
+
+struct sv {
+    int mssv;
+    string ten,  que;
+    char ns[max];
+    double gpa;
+};
+void nhap1sv(sv& a) {
+    cout << "mssv: "; cin >> a.mssv; cout << endl;
+    cout << "ho va ten: "; cin.ignore(1); getline(cin, a.ten);
+    cout << "ns: "; cin.getline(a.ns,max);
+    cout << "que quan: "; getline(cin, a.que);
+    cout << "gpa: "; cin >> a.gpa;
+    cout << endl;
 }
- bool empty(node a) {
-     return a == nullptr;
- }
- int Size(node a) {
-     int cnt = 0;
-     while (a != NULL) {
-         a = a->next;
-         ++cnt;
-     }
-     return cnt;
- }
- void insertfirst(node &a, int x) {
-     node tmp = makenode(x);
-     if (a == NULL) {
-         a = tmp;
-     }
-     else {
-         tmp->next = a;
-         a = tmp;
-     }
- }
- void insertlast(node &a, int x) {
-     node tmp = makenode(x);
-     if (a == NULL) {
-         a=tmp;
-     }
-     else {
-         node p = a;
-         while (p->next != NULL) {
-                p=p->next;
-         }
-         p->next = tmp; 
-     }
- }
- void insertmiddle(node &a, int x, int pos) {
-     int n = Size(a);
-     if (pos <= 0 || pos > n+1 ) {
-         cout << "vi tri chen ko hop le. ";
-     }
-     if (pos==1) {
-         insertfirst(a, x); return;
-     }
-     else if ( pos==n+1 ) {
-         insertlast(a, x); return;
-     }
-    node p = a;
-    for (int i = 1; i < pos-1 ; i++) {
-        p = p->next;
-    }
+void xuat1sv(const sv a) {
+    cout << "--------------------------\n";
+    cout << "mssv: " << a.mssv << endl;
+    cout << "ho va ten: " << a.ten << endl;
+    cout << "nam sinh: " << a.ns << endl;
+    cout << "que: " << a.que << endl;
+    cout << "gpa: " << fixed << setprecision(2) << a.gpa << endl;
+    cout << "--------------------------";
+}
+struct Node {
+    sv infor;
+    Node* next;
+};
+typedef Node* node;
+node makenode(const sv x) {
+    node tmp = new Node;
+    tmp->infor = x;
+    tmp->next = NULL;
+    return tmp;
+}
+void insertfisrt(node& a, sv x) {
     node tmp = makenode(x);
-    tmp->next = p->next;
-    p->next = tmp;
- }
- void deletefirst(node &a) {
-     if (a == NULL) return;
-     else a=a->next;
- }
- void deletelast(node &a) {
-     if (a == NULL) return;
-     node sau = a;
-     node truoc = NULL;
-         
-    while (sau ->next!= NULL) {
-        truoc = sau;
-        sau = sau->next;
-    }
-    if (truoc == NULL) {
-        a =NULL;
+    if (a == NULL) {
+        a = tmp;
     }
     else {
-        truoc->next = NULL;
+        tmp->next = a;
+        a = tmp;
     }
- }
- void deletemiddle(node& a, int pos) {
-     int  n = Size(a);
-     if (n == 1) {
-         a == NULL;
-     }
-     if (pos == 1) {
-         deletefirst(a); return;
-     }
-     else if (pos == n) {
-         deletelast(a); return;
-     }
-     node truoc = a;
-     node sau = NULL;
-     for (int i = 1; i < pos - 1; i++) {
-         truoc = truoc->next;
-     }
-     sau = truoc->next;
-     truoc->next = sau->next;
+}
+void nhapsv(node &a){
+    int chon=1;
+    
+    while (chon != 0) {
+        sv x;
+        nhap1sv(x);
+        insertfisrt(a,x);
+        cout << "ban co muon nhap tiep khong 1/0 (co/khong)";
+        cin >> chon;
+    }
+}
+void nhapsvtufile(node& x, string tenfile) {
+    ifstream f(tenfile);
+    if (f.is_open()) {
+        int n;
+        f >> n;
+        int i = 0;
+        while (i++ < n) {
+            sv a;
+            f >> a.mssv;
+            f.ignore();
+            getline(f, a.ten, '#');
+            f.getline(a.ns, max, '#');
+            getline(f, a.que, '#');
+            f >> a.gpa;
+            insertfisrt(x, a);
+        }
+    }
+    else
+    {
+        cout << "file chua duoc mo. ";
+    }
+}
+void sorttang(node &a) {
+    for (node i = a; i != NULL; i = i->next) {
+        node min = i;
+        for (node j = i->next; j != NULL; j = j->next) {
+            if (min->infor.gpa > j->infor.gpa) {
+                min = j;
+            }
+        }
+        sv tmp=min->infor;
+        min->infor = i->infor;
+        i->infor = tmp;
+    }
+}
+int Size(node a) {
+    int cnt = 0;
+    for (node p = a; p != NULL; p->next) {
+        p = p->next;
+        ++cnt;
+    }
+    return cnt;
+}
+void inrads(node a) {
+    while (a != NULL) {
+        xuat1sv(a->infor);
+        a = a->next;
+    }
+}
 
- }
- void cmp(node &a, node &b) {
-     node tmp = a;
-     a = b;
-     b = tmp;
- }
- void in(node a) {
-     while (a != NULL) {
-         cout << a->data << " ";
-         a=a->next;
-     }
- }
- void sort(node &a) {
-     for (node trc = a; trc != NULL; trc=trc->next) {
-         node min = trc;
-         for (node sau = trc->next; sau != NULL; sau=sau->next) {
-             if (sau->data < min->data) {
-                 min = sau;
-             }
-         }
-         int tmp = min->data;
-         min->data = trc->data;
-         trc->data = tmp;
-     }
- }
- int main()
- {
-     int lc;
-     bool kt = false;
-     node head = NULL;
-     do {
-         
-         
-         system("cls");
-         cout << "1:them vao dau ds \n"
-             << "2.them vao giua ds \n"
-             << "3.them vao cuoi ds \n"
-             << "4.xoa dau \n"
-             << "5.xoa giua \n"
-             << "6.xoa cuoi \n"
-             << "7.cout \n"
-             << "8.kt rong: \n"
-             << "9.xap xep tang dan: \n";
-         cout << "nhap vao lua chon ";
-         cin >> lc;
-         switch (lc)
-         {
-         case 1:
-         {
-             int x;
-             cout << "nhap vao data muon chen vao: ";
-             cin >> x;
-             insertfirst(head, x);
-             kt = true;
-         }
-         break;
-         case 2:
-         {
-             int x;
-             cout << "nhap vao data muon chen vao: ";
-             cin >> x;
-             int pos;
-             cout << "nhap vao vi tri: ";
-             cin >> pos;
-             insertmiddle(head, x, pos);
-             kt = true;
-         }
-         break;
-         case 3:
-         {
-             int x;
-             cout << "nhap vao data muon chen vao: ";
-             cin >> x;
-             insertlast(head, x);
-             kt = true;
-         }
-         break;
-         case 4:
-         {
-             deletefirst(head);
 
-         }
-         break;
-         case 5:
-         {
-             int pos;
-             cout << "nhap vao vi tri muon xoa: ";
-             cin >> pos;
-             deletemiddle(head, pos);
-             kt = true;
-         }
-         break;
-         case 6:
-         {
-             deletelast(head);
-         }
-         break;
-         case 7:
-         {
-             in(head);
-             system("pause");
-             kt = true;
-         }
-         break;
-         case 8:
-         {
-             empty(head);
-             cout << "size" << Size(head);
-             system("pause");
-             kt = true;
-         }
-         case 9:
-         {
-             sort(head);
-             kt = true;
-         }
-         break;
-         default:
-             kt = false;
-             break;
-         }
-     } while (kt==true);
+int main()
+{
+    node head = NULL;
+    int lc;
+    bool kt = false;
+    nhapsvtufile(head, "Sinhvien.txt");
+    sorttang(head);//gpa tu thap len cao.
+    inrads(head);
+        //system("cls");
+        //cout << "1:them vao dau ds \n"
+        //    << "2.them vao giua ds \n"
+        //    << "3.them vao cuoi ds \n"
+        //    << "4.xoa dau \n"
+        //    << "5.xoa giua \n"
+        //    << "6.xoa cuoi \n"
+        //    << "7.cout \n"
+        //    << "8.kt rong: \n"
+        //    << "9.xap xep tang dan: \n";
+        //cout << "nhap vao lua chon ";
+        //cin >> lc;
 }
