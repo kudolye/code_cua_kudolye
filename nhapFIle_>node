@@ -1,0 +1,122 @@
+
+
+#include <iostream>
+#include<iomanip>
+#include<string>
+#include<fstream>
+using namespace std;
+#define max 20
+
+struct sv {
+    int mssv;
+    string ten,  que;
+    char ns[max];
+    double gpa;
+};
+void nhap1sv(sv& a) {
+    cout << "mssv: "; cin >> a.mssv; cout << endl;
+    cout << "ho va ten: "; cin.ignore(1); getline(cin, a.ten);
+    cout << "ns: "; cin.getline(a.ns,max);
+    cout << "que quan: "; getline(cin, a.que);
+    cout << "gpa: "; cin >> a.gpa;
+    cout << endl;
+}
+void xuat1sv(const sv a) {
+    cout << "--------------------------\n";
+    cout << "mssv: " << a.mssv << endl;
+    cout << "ho va ten: " << a.ten << endl;
+    cout << "nam sinh: " << a.ns << endl;
+    cout << "que: " << a.que << endl;
+    cout << "gpa: " << fixed << setprecision(2) << a.gpa << endl;
+    cout << "--------------------------";
+}
+struct Node {
+    sv infor;
+    Node* next;
+};
+typedef Node* node;
+node makenode(const sv x) {
+    node tmp = new Node;
+    tmp->infor = x;
+    tmp->next = NULL;
+    return tmp;
+}
+void insertfisrt(node& a, sv x) {
+    node tmp = makenode(x);
+    if (a == NULL) {
+        a = tmp;
+    }
+    else {
+        tmp->next = a;
+        a = tmp;
+    }
+}
+void nhapsv(node &a){
+    int chon=1;
+    
+    while (chon != 0) {
+        sv x;
+        nhap1sv(x);
+        insertfisrt(a,x);
+        cout << "ban co muon nhap tiep khong 1/0 (co/khong)";
+        cin >> chon;
+    }
+}
+void nhapsvtufile(node& x, string tenfile) {
+    ifstream f(tenfile);
+    if (f.is_open()) {
+        int n;
+        f >> n;
+        int i = 0;
+        while (i++ < n) {
+            sv a;
+            f >> a.mssv;
+            f.ignore();
+            getline(f, a.ten, '#');
+            f.getline(a.ns, max, '#');
+            getline(f, a.que, '#');
+            f >> a.gpa;
+            insertfisrt(x, a);
+        }
+    }
+    else
+    {
+        cout << "file chua duoc mo. ";
+    }
+}
+int Size(node a) {
+    int cnt = 0;
+    for (node p = a; p != NULL; p->next) {
+        p = p->next;
+        ++cnt;
+    }
+    return cnt;
+}
+void inrads(node a) {
+    while (a != NULL) {
+        xuat1sv(a->infor);
+        a = a->next;
+    }
+}
+
+
+int main()
+{
+    node head = NULL;
+    int lc;
+    bool kt = false;
+    nhapsvtufile(head, "Sinhvien.txt");
+    inrads(head);
+        //system("cls");
+        //cout << "1:them vao dau ds \n"
+        //    << "2.them vao giua ds \n"
+        //    << "3.them vao cuoi ds \n"
+        //    << "4.xoa dau \n"
+        //    << "5.xoa giua \n"
+        //    << "6.xoa cuoi \n"
+        //    << "7.cout \n"
+        //    << "8.kt rong: \n"
+        //    << "9.xap xep tang dan: \n";
+        //cout << "nhap vao lua chon ";
+        //cin >> lc;
+}
